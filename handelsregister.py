@@ -23,18 +23,19 @@ class HandelsRegister:
         self.args = args
         self.browser = mechanize.Browser()
 
-        self.browser.set_debug_http(args.debug)
-        self.browser.set_debug_responses(args.debug)
+        self.browser.set_debug_http(args.debug) # Print HTTP headers.
+        self.browser.set_debug_responses(args.debug) # Log HTTP response bodies (i.e. the HTML, most of the time).
         # self.browser.set_debug_redirects(True)
 
-        self.browser.set_handle_robots(False)
-        self.browser.set_handle_equiv(True)
-        self.browser.set_handle_gzip(True)
-        self.browser.set_handle_refresh(False)
-        self.browser.set_handle_redirect(True)
-        self.browser.set_handle_referer(True)
+        self.browser.set_handle_robots(False) # Ignore robots.txt.  Do not do this without thought and consideration.
+        self.browser.set_handle_equiv(True) # Don't handle HTTP-EQUIV headers (HTTP headers embedded in HTML).
+        self.browser.set_handle_gzip(True) # Tell the browser to send the Accept-Encoding: gzip header to the server
+                                           # to indicate it supports gzip Content-Encoding
+        self.browser.set_handle_refresh(False) # Don't handle Refresh redirections
+        self.browser.set_handle_redirect(True) # Set whether to handle HTTP 30x redirections.
+        self.browser.set_handle_referer(True) # Don't add Referer (sic) header
 
-        self.browser.addheaders = [
+        self.browser.addheaders = [ #header is sent out like this in all of them
             (
                 "User-Agent",
                 "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.5 Safari/605.1.15",
