@@ -1,2 +1,9 @@
 UserName/AppData/Local/Programs/Python/Python311
 And $"{line_before}/Scripts"
+
+See if you need to add these:
+pip install ndg-httpsclient
+
+pip install pyopenssl
+
+pip install pyasn1
