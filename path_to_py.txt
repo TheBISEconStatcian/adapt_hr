@@ -1,0 +1,2 @@
+UserName/AppData/Local/Programs/Python/Python311
+And $"{line_before}/Scripts"
