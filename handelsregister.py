@@ -5,6 +5,7 @@ You can query, download, automate and much more, without using a web browser.
 """
 
 import argparse
+from unittest import case
 import mechanize
 import re
 import pathlib
@@ -12,11 +13,87 @@ import sys
 from bs4 import BeautifulSoup
 
 # Dictionaries to map arguments to values
-schlagwortOptionen = {
+schlagwortOptionen = { #dictionary
     "all": 1,
     "min": 2,
     "exact": 3
 }
+
+rechtsFormEncoding = {
+    "Aktiengesellschaft": 1,
+"eingetragene Genossenschaft": 2,
+"eingetragener Verein": 3,
+"Einzelkauffrau": 4,
+"Einzelkaufmann": 5,
+"Europäische Aktiengesellschaft (SE)": 6,
+"Europäische wirtschaftliche Interessenvereinigung": 7,
+"Gesellschaft mit beschränkter Haftung": 8,
+"HRA Juristische Person": 9,
+"Kommanditgesellschaft": 10,
+"Offene Handelsgesellschaft": 12,
+"Partnerschaft": 13,
+"Rechtsform ausländischen Rechts GnR": 14,
+"Rechtsform ausländischen Rechts HRA": 15,
+"Rechtsform ausländischen Rechts HRb": 16,
+"Rechtsform ausländischen Rechts PR": 17,
+"Seerechtliche Gesellschaft": 18,
+"Versicherungsverein auf Gegenseitigkeit": 19,
+"Anstalt öffentlichen Rechts": 40,
+"Bergrechtliche Gesellschaft": 46,
+"Körperschaft öffentlichen Rechts": 48,
+"Europäische Genossenschaft (SCE)": 49,
+"Stiftung privaten Rechts": 51,
+"Stiftung öffentlichen Rechts": 52,
+"HRA sonstige Rechtsformen": 53,
+"Sonstige juristische Person": 54,
+"Einzelkaufmann/Einzelkauffrau": 55
+}
+"""
+    match abb:
+        case "GmbH":
+            key = "Gesellschaft mit beschränkter Haftung"
+        case "AG":
+            key= "Aktiengesellschaft"
+        case "oHG":
+            key = "Offene Handelsgesellschaft"
+        case "eG":
+            key = "eingetragene Genossenschaft"
+        case "eV" | "e.V.":
+            key = "eingetragener Verein"
+        case "SE":
+            key = "Europäische Aktiengesellschaft (SE)"
+        case "KG":
+            key = "Kommanditgesellschaft"
+        case "SCE":
+            key = "Europäische Genossenschaft (SCE)"
+        case _:
+            key = abb
+"""
+def handleAbbreviation(abb: str) -> int :
+    key: str
+    #if abb == "GmbH" :
+     #   key = "Gesellschaft mit beschränkter Haftung"
+    match abb:
+        case "GmbH":
+            key = "Gesellschaft mit beschränkter Haftung"
+        case "AG":
+            key= "Aktiengesellschaft"
+        case "oHG":
+            key = "Offene Handelsgesellschaft"
+        case "eG":
+            key = "eingetragene Genossenschaft"
+        case "eV" | "e.V.":
+            key = "eingetragener Verein"
+        case "SE":
+            key = "Europäische Aktiengesellschaft (SE)"
+        case "KG":
+            key = "Kommanditgesellschaft"
+        case "SCE":
+            key = "Europäische Genossenschaft (SCE)"
+        case _:
+            key = abb
+    
+    return key
 
 class HandelsRegister:
     def __init__(self, args):
@@ -70,14 +147,15 @@ class HandelsRegister:
             # TODO implement token bucket to abide by rate limit
             # Use an atomic counter: https://gist.github.com/benhoyt/8c8a8d62debe8e5aa5340373f9c509c7
             response_search = self.browser.follow_link(text="Advanced search")
+            #So first you search for the Content by following the link "Advanced search"
 
             if self.args.debug == True:
                 print(self.browser.title())
 
-            self.browser.select_form(name="form")
+            self.browser.select_form(name="form") #fill out the form in the advanced search option
 
-            self.browser["form:schlagwoerter"] = self.args.schlagwoerter
-            so_id = schlagwortOptionen.get(self.args.schlagwortOptionen)
+            self.browser["form:schlagwoerter"] = self.args.schlagwoerter 
+            so_id = schlagwortOptionen.get(self.args.schlagwortOptionen) #usal get for enums
 
             self.browser["form:schlagwortOptionen"] = [str(so_id)]
 
@@ -92,7 +170,7 @@ class HandelsRegister:
 
             # TODO catch the situation if there's more than one company?
             # TODO get all documents attached to the exact company
-            # TODO parse useful information out of the PDFs
+            # TODO parse useful information out of the PDFsf
         return get_companies_in_searchresults(html)
 
 
@@ -111,7 +189,7 @@ def parse_result(result):
     d['history'] = []
     hist_start = 8
     hist_cnt = (len(cells)-hist_start)/3
-    for i in range(hist_start, len(cells), 3):
+    for i in range(hist_start, len(cells) - 1, 3):
         d['history'].append((cells[i], cells[i+1])) # (name, location)
     #print('d:',d)
     return d
@@ -179,7 +257,7 @@ def parse_args():
 
     return args
 
-if __name__ == "__main__":
+if __name__ == "__main__": #condition means: are you been directly called from interpreter
     args = parse_args()
     h = HandelsRegister(args)
     h.open_startpage()
