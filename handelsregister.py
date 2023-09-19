@@ -131,7 +131,12 @@ class HandelsRegister:
             self.browser["form:schlagwoerter"] = self.args.schlagwoerter 
             so_id = schlagwortOptionen.get(self.args.schlagwortOptionen) #usal get for enums
 
-            self.browser["form:schlagwortOptionen"] = [str(so_id)]
+            self.browser["form:schlagwortOptionen"] = [str(so_id)] #seems to set the value 
+
+            #form:registerArt_input for the search with HR-number
+
+            #when value is equal to HRA, HRB, GnR, PR, VR,
+            #It's in an input mask - or a select
 
             response_result = self.browser.submit()
 
@@ -218,6 +223,13 @@ def parse_args():
                           help="Keyword options: all=contain all keywords; min=contain at least one keyword; exact=contain the exact company name.",
                           choices=["all", "min", "exact"],
                           default="all"
+                        )
+    parser.add_argument(
+                          "-ra",
+                          "--registerArt",
+                          help="Registerart options: alle, HRA, HRB, GnR, PR, VR.",
+                          choices=["HRA", "HRB", "GnR", "PR", "VR"],
+                          default=""
                         )
     args = parser.parse_args()
 
