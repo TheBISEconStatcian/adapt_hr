@@ -48,52 +48,26 @@ rechtsFormEncoding = {
 "Sonstige juristische Person": 54,
 "Einzelkaufmann/Einzelkauffrau": 55
 }
-"""
-    match abb:
-        case "GmbH":
-            key = "Gesellschaft mit beschränkter Haftung"
-        case "AG":
-            key= "Aktiengesellschaft"
-        case "oHG":
-            key = "Offene Handelsgesellschaft"
-        case "eG":
-            key = "eingetragene Genossenschaft"
-        case "eV" | "e.V.":
-            key = "eingetragener Verein"
-        case "SE":
-            key = "Europäische Aktiengesellschaft (SE)"
-        case "KG":
-            key = "Kommanditgesellschaft"
-        case "SCE":
-            key = "Europäische Genossenschaft (SCE)"
-        case _:
-            key = abb
-"""
+
 def handleAbbreviation(abb: str) -> int :
-    key: str
-    #if abb == "GmbH" :
-     #   key = "Gesellschaft mit beschränkter Haftung"
     match abb:
         case "GmbH":
-            key = "Gesellschaft mit beschränkter Haftung"
+            abb = "Gesellschaft mit beschränkter Haftung"
         case "AG":
-            key= "Aktiengesellschaft"
+            abb= "Aktiengesellschaft"
         case "oHG":
-            key = "Offene Handelsgesellschaft"
+            abb = "Offene Handelsgesellschaft"
         case "eG":
-            key = "eingetragene Genossenschaft"
+            abb = "eingetragene Genossenschaft"
         case "eV" | "e.V.":
-            key = "eingetragener Verein"
+            abb = "eingetragener Verein"
         case "SE":
-            key = "Europäische Aktiengesellschaft (SE)"
+            abb = "Europäische Aktiengesellschaft (SE)"
         case "KG":
-            key = "Kommanditgesellschaft"
+            abb = "Kommanditgesellschaft"
         case "SCE":
-            key = "Europäische Genossenschaft (SCE)"
-        case _:
-            key = abb
-    
-    return key
+            abb = "Europäische Genossenschaft (SCE)"
+    return rechtsFormEncoding.get(abb)
 
 class HandelsRegister:
     def __init__(self, args):
