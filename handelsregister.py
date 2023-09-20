@@ -231,6 +231,12 @@ def parse_args():
                           choices=["HRA", "HRB", "GnR", "PR", "VR"],
                           default=""
                         )
+    parser.add_argument(  #form:registerNummer
+                          "-rn",
+                          "--registerNummer",
+                          help="Register number, without the type"
+                          default=""
+                        )
     args = parser.parse_args()
 
 
