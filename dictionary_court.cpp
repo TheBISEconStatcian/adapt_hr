@@ -68,7 +68,7 @@ int main()
 
 	auto csv_path{ std::filesystem::current_path() / "Data/register_code.csv" };
 	std::ofstream csv_mined{mined_path};
-	csv_mined << "Amtsgericht;Code\n"
+	csv_mined << "Amtsgericht;Code\n";
 
 	std::string line;
 	while (std::getline(file, line))
