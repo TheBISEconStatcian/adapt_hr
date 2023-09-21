@@ -66,6 +66,9 @@ int main()
 	auto mined_path{ std::filesystem::current_path() / "Data/register_code_py.txt" };
 	std::ofstream mined{mined_path};
 
+	auto csv_path{ std::filesystem::current_path() / "Data/register_code.csv" };
+	std::ofstream csv_mined{mined_path};
+	csv_mined << "Amtsgericht;Code\n"
 
 	std::string line;
 	while (std::getline(file, line))
@@ -75,7 +78,9 @@ int main()
 		while (std::getline(options, option))
 		{
 			std::stringstream ss_option(option);
-			mined << extract_entry(ss_option).json_str();
+			register_encode decoder(extract_entry(ss_option));
+			mined << decoder.json_str();
+			csv_mined << decoder.csv_str();
 		}
 	}
 
