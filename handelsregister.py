@@ -13,64 +13,6 @@ import pathlib
 import sys
 from bs4 import BeautifulSoup
 
-# Dictionaries to map arguments to values
-schlagwortOptionen = { #dictionary
-    "all": 1,
-    "min": 2,
-    "exact": 3
-}
-
-rechtsFormEncoding = {
-    "Aktiengesellschaft": 1,
-"eingetragene Genossenschaft": 2,
-"eingetragener Verein": 3,
-"Einzelkauffrau": 4,
-"Einzelkaufmann": 5,
-"Europäische Aktiengesellschaft (SE)": 6,
-"Europäische wirtschaftliche Interessenvereinigung": 7,
-"Gesellschaft mit beschränkter Haftung": 8,
-"HRA Juristische Person": 9,
-"Kommanditgesellschaft": 10,
-"Offene Handelsgesellschaft": 12,
-"Partnerschaft": 13,
-"Rechtsform ausländischen Rechts GnR": 14,
-"Rechtsform ausländischen Rechts HRA": 15,
-"Rechtsform ausländischen Rechts HRb": 16,
-"Rechtsform ausländischen Rechts PR": 17,
-"Seerechtliche Gesellschaft": 18,
-"Versicherungsverein auf Gegenseitigkeit": 19,
-"Anstalt öffentlichen Rechts": 40,
-"Bergrechtliche Gesellschaft": 46,
-"Körperschaft öffentlichen Rechts": 48,
-"Europäische Genossenschaft (SCE)": 49,
-"Stiftung privaten Rechts": 51,
-"Stiftung öffentlichen Rechts": 52,
-"HRA sonstige Rechtsformen": 53,
-"Sonstige juristische Person": 54,
-"Einzelkaufmann/Einzelkauffrau": 55
-}
-
-
-def handleAbbreviation(abb: str) -> int :
-    match abb:
-        case "GmbH":
-            abb = "Gesellschaft mit beschränkter Haftung"
-        case "AG":
-            abb= "Aktiengesellschaft"
-        case "oHG":
-            abb = "Offene Handelsgesellschaft"
-        case "eG":
-            abb = "eingetragene Genossenschaft"
-        case "eV" | "e.V.":
-            abb = "eingetragener Verein"
-        case "SE":
-            abb = "Europäische Aktiengesellschaft (SE)"
-        case "KG":
-            abb = "Kommanditgesellschaft"
-        case "SCE":
-            abb = "Europäische Genossenschaft (SCE)"
-    return rechtsFormEncoding.get(abb)
-
 class HandelsRegister:
     def __init__(self, args):
         self.args = args

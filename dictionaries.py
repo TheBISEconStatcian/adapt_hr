@@ -1,3 +1,5 @@
+# Dictionaries to map arguments to values
+
 schlagwortOptionen = { #dictionary
     "all": 1,
     "min": 2,
