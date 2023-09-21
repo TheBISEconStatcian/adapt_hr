@@ -5,6 +5,7 @@ You can query, download, automate and much more, without using a web browser.
 """
 
 import argparse
+from dictionaries import *
 from unittest import case
 import mechanize
 import re
@@ -48,6 +49,7 @@ rechtsFormEncoding = {
 "Sonstige juristische Person": 54,
 "Einzelkaufmann/Einzelkauffrau": 55
 }
+
 
 def handleAbbreviation(abb: str) -> int :
     match abb:
@@ -234,7 +236,13 @@ def parse_args():
     parser.add_argument(  #form:registerNummer
                           "-rn",
                           "--registerNummer",
-                          help="Register number, without the type"
+                          help="Register number, without the type",
+                          default=""
+                        )
+    parser.add_argument(  #form:registergericht or form:registergericht_focus -> rather form:registergericht_input
+                          "-rn",
+                          "--registerNummer",
+                          help="Register number, without the type",
                           default=""
                         )
     args = parser.parse_args()
