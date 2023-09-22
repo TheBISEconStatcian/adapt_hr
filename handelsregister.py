@@ -14,12 +14,25 @@ import sys
 from bs4 import BeautifulSoup
 
 class HandelsRegister:
-    def __init__(self, args):
-        self.args = args
+    def __init__(self, parser):
+
+        self.args = parser.parse_args()
+        # Enable debugging if wanted
+        if self.args.debug == True:
+            import logging
+            logger = logging.getLogger("mechanize")
+            logger.addHandler(logging.StreamHandler(sys.stdout))
+            logger.setLevel(logging.DEBUG)
+
+        #Save default args
+        self.default_args = {}
+        for key in vars(self.args):
+            self.default_args[key] = parser.get_default(key)
+
         self.browser = mechanize.Browser()
 
-        self.browser.set_debug_http(args.debug) # Print HTTP headers.
-        self.browser.set_debug_responses(args.debug) # Log HTTP response bodies (i.e. the HTML, most of the time).
+        self.browser.set_debug_http(self.args.debug) # Print HTTP headers.
+        self.browser.set_debug_responses(self.args.debug) # Log HTTP response bodies (i.e. the HTML, most of the time).
         # self.browser.set_debug_redirects(True)
 
         self.browser.set_handle_robots(False) # Ignore robots.txt.  Do not do this without thought and consideration.
@@ -106,6 +119,9 @@ class HandelsRegister:
             # TODO get all documents attached to the exact company
             # TODO parse useful information out of the PDFsf
         return get_companies_in_searchresults(html)
+    
+    def retrieve_documents(self):
+        return 0
 
 
 def parse_result(result):
@@ -150,7 +166,7 @@ def get_companies_in_searchresults(html):
             results.append(d)
     return results
 
-def parse_args():
+def create_parser():
 # Parse arguments
     parser = argparse.ArgumentParser(description='A handelsregister CLI')
     parser.add_argument(
@@ -199,20 +215,20 @@ def parse_args():
                           help="Register court of the company",
                           default=""
                         )
-    args = parser.parse_args()
+    parser.add_argument(
+                          "-dtd",
+                          "--documentsToDownload",
+                          help="AD = Aktueller Abdruck, CD = Chronologischer Abdruck, SI = Strukturiertes Inhalt",
+                          choices=["AD", "CD", "SI"],
+                          default=""
+                        )
 
-    # Enable debugging if wanted
-    if args.debug == True:
-        import logging
-        logger = logging.getLogger("mechanize")
-        logger.addHandler(logging.StreamHandler(sys.stdout))
-        logger.setLevel(logging.DEBUG)
 
-    return args
+
+    return parser
 
 if __name__ == "__main__": #condition means: are you been directly called from interpreter
-    args = parse_args()
-    h = HandelsRegister(args)
+    h = HandelsRegister(create_parser())
     h.open_startpage()
     companies = h.search_company()
     if companies is not None:
