@@ -121,7 +121,8 @@ class HandelsRegister:
         return get_companies_in_searchresults(html)
     
     def retrieve_documents(self):
-        return 0
+        if self.args.documentsToDownload != self.default_args["documentsToDownload"]:
+            self.browser.follow_link(text = str(self.args.documentsToDownload))
 
 
 def parse_result(result):
