@@ -72,15 +72,23 @@ class HandelsRegister:
 
             self.browser.select_form(name="form") #fill out the form in the advanced search option
 
+            #Schlagwoerteingabe
             self.browser["form:schlagwoerter"] = self.args.schlagwoerter 
             so_id = schlagwortOptionen.get(self.args.schlagwortOptionen) #usal get for enums
 
+            #Suchoption
             self.browser["form:schlagwortOptionen"] = [str(so_id)] #seems to set the value 
 
             #form:registerArt_input for the search with HR-number
+            print(self.args.registerArt)
+            self.browser["form:registerArt_input"] = [self.args.registerArt]
 
-            #when value is equal to HRA, HRB, GnR, PR, VR,
-            #It's in an input mask - or a select
+            #Registergericht kann gut sein, dass es eigentlich form:registergericht_focus ist
+            ra_id = registerGerichtEncoding.get(self.args.registerCourt)
+            self.browser["form:registergericht_input"] = [str(ra_id)]
+
+            #Register-Nr
+            self.browser["form:registerNummer"] = self.args.registerNummer
 
             response_result = self.browser.submit()
 
@@ -158,14 +166,15 @@ def parse_args():
                           "-s",
                           "--schlagwoerter",
                           help="Search for the provided keywords",
-                          required=True,
-                          default="Gasag AG" # TODO replace default with a generic search term
+                          required=False,
+                          default=""
                         )
     parser.add_argument(
                           "-so",
                           "--schlagwortOptionen",
                           help="Keyword options: all=contain all keywords; min=contain at least one keyword; exact=contain the exact company name.",
                           choices=["all", "min", "exact"],
+                          required= True,
                           default="all"
                         )
     parser.add_argument(
@@ -182,13 +191,12 @@ def parse_args():
                           default=""
                         )
     parser.add_argument(  #form:registergericht or form:registergericht_focus -> rather form:registergericht_input
-                          "-rn",
-                          "--registerNummer",
-                          help="Register number, without the type",
+                          "-rc",
+                          "--registerCourt",
+                          help="Register court of the company",
                           default=""
                         )
     args = parser.parse_args()
-
 
     # Enable debugging if wanted
     if args.debug == True:
@@ -207,3 +215,4 @@ if __name__ == "__main__": #condition means: are you been directly called from i
     if companies is not None:
         for c in companies:
             pr_company_info(c)
+#Köln HRB 39853
