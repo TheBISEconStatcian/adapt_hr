@@ -53,6 +53,7 @@ class HandelsRegister:
     def companyname2cachename(self, companyname):
         # map a companyname to a filename, that caches the downloaded HTML, so re-running this script touches the
         # webserver less often.
+        print(self.cachedir)
         return self.cachedir / companyname
 
     def search_company(self):
@@ -64,8 +65,10 @@ class HandelsRegister:
         else:
             # TODO implement token bucket to abide by rate limit
             # Use an atomic counter: https://gist.github.com/benhoyt/8c8a8d62debe8e5aa5340373f9c509c7
-            response_search = self.browser.follow_link(text="Advanced search")
+            response_search = self.browser.follow_link(text="Advanced search") 
             #So first you search for the Content by following the link "Advanced search"
+            #This follows the link either by looking for the text in the a, so the displayed one or the title
+            #most likely just the text, right?
 
             if self.args.debug == True:
                 print(self.browser.title())
@@ -81,7 +84,7 @@ class HandelsRegister:
 
             #form:registerArt_input for the search with HR-number
             print(self.args.registerArt)
-            self.browser["form:registerArt_input"] = [self.args.registerArt]
+            self.browser["form:registerArt_input"] = [self.args.registerArt] #sets it as sequence
 
             #Registergericht kann gut sein, dass es eigentlich form:registergericht_focus ist
             ra_id = registerGerichtEncoding.get(self.args.registerCourt)
