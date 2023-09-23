@@ -11,6 +11,7 @@ import mechanize
 import re
 import pathlib
 import sys
+import time
 from bs4 import BeautifulSoup
 
 class HandelsRegister:
@@ -66,8 +67,18 @@ class HandelsRegister:
     def companyname2cachename(self, companyname):
         # map a companyname to a filename, that caches the downloaded HTML, so re-running this script touches the
         # webserver less often.
-        print(self.cachedir)
         return self.cachedir / companyname
+    
+    def retrieve_documents(self):
+        if self.args.documentsToDownload != self.default_args["documentsToDownload"]:
+            self.args.documentsToDownload
+            regex_doc = f".*?{str(self.args.documentsToDownload)}.*?"
+            a_html = self.browser.follow_link(text_regex = regex_doc)
+            with open("cache/lets_see.html", "w") as please:
+                please.write(a_html.read().decode("utf-8"))
+            print("Seems to be ok")
+            time.sleep(5)
+            self.browser.submit("form:kostenpflichtigabrufen")
 
     def search_company(self):
         cachename = self.companyname2cachename(self.args.schlagwoerter)
@@ -118,11 +129,11 @@ class HandelsRegister:
             # TODO catch the situation if there's more than one company?
             # TODO get all documents attached to the exact company
             # TODO parse useful information out of the PDFsf
+            self.retrieve_documents()
         return get_companies_in_searchresults(html)
     
-    def retrieve_documents(self):
-        if self.args.documentsToDownload != self.default_args["documentsToDownload"]:
-            self.browser.follow_link(text = str(self.args.documentsToDownload))
+ 
+
 
 
 def parse_result(result):
